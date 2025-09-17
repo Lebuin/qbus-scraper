@@ -230,7 +230,7 @@ class QbusScraper:
 
         return {
             'timestamp': datetime.now().isoformat(),
-            'values': tiles_data,
+            'fields': tiles_data,
         }
 
 
