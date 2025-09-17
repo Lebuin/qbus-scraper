@@ -1,0 +1,30 @@
+services:
+  selenium:
+    image: selenium/standalone-firefox:latest
+    restart: unless-stopped
+    shm_size: 2g
+    healthcheck:
+      test: curl --fail http://localhost:4444/ || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  scraper:
+    build: .
+    restart: unless-stopped
+    init: true
+    depends_on:
+      selenium:
+        condition: service_healthy
+        restart: true
+    env_file:
+      - .env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - .:/opt/qbus-scraper
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.desigo-scraper.rule=Host(`qbus-scraper.lenders.dev`)"
+      - "traefik.http.routers.desigo-scraper.tls=true"
+      - "traefik.http.routers.desigo-scraper.tls.certresolver=myresolver"
