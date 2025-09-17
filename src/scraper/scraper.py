@@ -206,11 +206,24 @@ class QbusScraper:
             tiles = section.find_elements(*selectors['tile'])
             for tile in tiles:
                 try:
-                    name = tile.find_element(*selectors['tile_name']).text
-                    value_str = tile.find_element(*selectors['tile_value']).text
-                    match = re.search(r'[\d.]+', value_str)
-                    if match:
-                        value = float(match.group(0))
+                    elem_name = tile.find_element(*selectors['tile_name'])
+                    elems_value = tile.find_elements(*selectors['tile_value'])
+                    elems_binary_true = tile.find_elements(*selectors['tile_binary_true'])
+                    elems_binary_false = tile.find_elements(*selectors['tile_binary_false'])
+
+                    name = elem_name.text
+                    value = None
+                    if len(elems_value) > 0:
+                        value_str = elems_value[0].text
+                        match = re.search(r'[\d.]+', value_str)
+                        if match:
+                            value = float(match.group(0))
+                    elif len(elems_binary_true) > 0:
+                        value = True
+                    elif len(elems_binary_false) > 0:
+                        value = False
+
+                    if value is not None:
                         tiles_data[name] = value
                 except WebDriverException:
                     pass

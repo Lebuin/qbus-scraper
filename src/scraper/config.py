@@ -45,5 +45,7 @@ SELECTORS: dict[str, dict[str, tuple[ByType, str]]] = {
         'tile': (By.CSS_SELECTOR, 'ccl-icon1x1, ccl-icon2x2'),
         'tile_name': (By.CSS_SELECTOR, '.name, .text-container > :not(.status-to-show)'),
         'tile_value': (By.CSS_SELECTOR, '.value, .text-container > .status-to-show'),
+        'tile_binary_true': (By.CSS_SELECTOR, 'img[src*="valuetrue"]'),
+        'tile_binary_false': (By.CSS_SELECTOR, 'img[src*="valuefalse"]'),
     }
 }
